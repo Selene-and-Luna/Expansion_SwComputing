@@ -521,6 +521,22 @@ public final class DrawManager {
         backBufferGraphics.drawString(scoreString, screen.getWidth() - 60, 25);
     }
 
+    /**
+     * Draws current score on screen.
+     *
+     * @param screen
+     *               Screen to draw on.
+     * @param exp
+     *               Current exp.
+     */
+    public void drawExp(final Screen screen, final int exp) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.decode("#AD19EC"));
+        String scoreString = String.format("%03d", exp);
+        backBufferGraphics.drawString(scoreString, screen.getWidth() - 60, 84);
+        backBufferGraphics.drawString("EXP :            %", screen.getWidth()-115, 84);
+    }
+
 	/**
 	 * Draws number of remaining lives on screen.
 	 *

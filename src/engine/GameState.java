@@ -27,6 +27,7 @@ public class GameState {
     private int shipsDestroyed;
 	/** Current coin count. */ // ADD THIS LINE
     private static int coins = 0;
+    private int exp = 0;
 
     private static class EffectState {
         Cooldown cooldown;
@@ -70,7 +71,7 @@ public class GameState {
 	 *                       Current coin count. // ADD THIS LINE
 	 */
 	public GameState(final int level, final int score, final int livesRemaining, final int bulletsShot, final int shipsDestroyed, final int coins) { // MODIFY THIS LINE
-		this.level = level;
+        this.level = level;
 		this.score = score;
 		this.lives = livesRemaining;
 		this.bulletsShot = bulletsShot;
@@ -82,6 +83,10 @@ public class GameState {
 	public int getScore() {
 		return score;
 	}
+
+    public int getExp() {
+        return exp;
+    }
 
 	public int getLives() {
 		return lives;
@@ -155,6 +160,12 @@ public class GameState {
 	public int getPlayerLives() {
 		return lives;
 	}
+
+    // for adding exp
+    public void addExp(final int point) {exp += point;}
+
+    // for level-up exp
+    public void resetExp() {exp -= 100;}
 
     /* ---------- Item effects status methods ---------- **/
 

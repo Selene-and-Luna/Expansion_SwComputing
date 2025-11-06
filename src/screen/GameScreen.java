@@ -245,6 +245,8 @@ public class GameScreen extends Screen {
             return;
         }
 
+        checkLevelUp();
+
         if (!this.isPaused) {
             if (this.inputDelay.checkFinished() && !this.levelFinished) {
                 boolean moveRight, moveLeft, fire;
@@ -365,6 +367,7 @@ public class GameScreen extends Screen {
 
 		// Aggregate UI (team score & team lives)
 		drawManager.drawScore(this, state.getScore());
+        drawManager.drawExp(this, state.getExp());
         drawManager.drawLives(this, state.getLives());
 		drawManager.drawCoins(this,  state.getCoins()); // ADD THIS LINE - 2P mode: team total
         // 2P mode: setting per-player coin count
@@ -414,6 +417,16 @@ public class GameScreen extends Screen {
 		}
 
         drawManager.completeDrawing(this);
+    }
+
+    /**
+     * Checks whether the player has enough EXP to level up.
+     */
+    private void checkLevelUp(){
+        if(state.getExp() >= 100){
+            state.resetExp();
+            isPaused = true;
+        }
     }
 
     /**
@@ -502,10 +515,12 @@ public class GameScreen extends Screen {
 
                         if (enemyShip.isDestroyed()) {
                             int points = enemyShip.getPointValue();
+                            int exp = enemyShip.getExpValue();
                             state.addCoins(enemyShip.getCoinValue()); // 2P mode: modified to per-player coins
 
                             drawManager.triggerExplosion(enemyShip.getPositionX(), enemyShip.getPositionY(), true, finalShip);
                             state.addScore(points); // 2P mode: modified to add to P1 score for now
+                            state.addExp(exp);
                             state.incShipsDestroyed();
 
                             // obtain drop from ItemManager (may return null)
@@ -525,10 +540,12 @@ public class GameScreen extends Screen {
 
                 if (this.enemyShipSpecial != null && !this.enemyShipSpecial.isDestroyed() && checkCollision(bullet, this.enemyShipSpecial)) {
                     int points = this.enemyShipSpecial.getPointValue();
+                    int exp = this.enemyShipSpecial.getExpValue();
 
                     state.addCoins(this.enemyShipSpecial.getCoinValue()); // 2P mode: modified to per-player coins
 
                     state.addScore(points);
+                    state.addExp(exp);
                     state.incShipsDestroyed(); // 2P mode: modified incrementing ships destroyed
 
 					this.enemyShipSpecial.destroy();

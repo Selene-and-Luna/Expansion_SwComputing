@@ -25,6 +25,15 @@ public class EnemyShip extends Entity {
     /** Point value of a bonus enemy. */
     private static final int BONUS_TYPE_POINTS = 100;
 
+    /** exp value of a type A enemy. */
+    private static final int A_TYPE_EXP = 10;
+    /** exp value of a type B enemy. */
+    private static final int B_TYPE_EXP = 20;
+    /** exp value of a type C enemy. */
+    private static final int C_TYPE_EXP = 30;
+    /** exp value of a bonus enemy. */
+    private static final int BONUS_TYPE_EXP = 100;
+
     private static final int A_TYPE_COINS = 2;
     private static final int B_TYPE_COINS = 3;
     private static final int C_TYPE_COINS = 5;
@@ -38,6 +47,8 @@ public class EnemyShip extends Entity {
     private int pointValue;
 
     private int coinValue;
+
+    private int expValue;
 
     /** Current health of the enemy ship */
     private int health;
@@ -66,18 +77,21 @@ public class EnemyShip extends Entity {
             case EnemyShipA2:
                 this.pointValue = A_TYPE_POINTS;
                 this.coinValue = A_TYPE_COINS;
+                this.expValue = A_TYPE_EXP;
                 this.health = 2;
                 break;
             case EnemyShipB1:
             case EnemyShipB2:
                 this.pointValue = B_TYPE_POINTS;
                 this.coinValue = B_TYPE_COINS;
+                this.expValue = B_TYPE_EXP;
                 this.health = 1;
                 break;
             case EnemyShipC1:
             case EnemyShipC2:
                 this.pointValue = C_TYPE_POINTS;
                 this.coinValue = C_TYPE_COINS;
+                this.expValue = C_TYPE_EXP;
                 this.health = 1;
                 break;
             default:
@@ -122,6 +136,8 @@ public class EnemyShip extends Entity {
     public final int getPointValue() {
         return this.pointValue;
     }
+
+    public final int getExpValue() { return this.expValue;}
 
     /**
      * Moves the ship the specified distance.
