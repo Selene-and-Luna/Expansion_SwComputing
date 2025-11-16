@@ -1,8 +1,7 @@
 package screen;
 
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import engine.Cooldown;
 import engine.Core;
@@ -10,6 +9,8 @@ import engine.GameSettings;
 import engine.GameState;
 import engine.*;
 import engine.SoundManager;
+import engine.augment.Augment;
+import engine.augment.AugmentPool;
 import entity.Bullet;
 import entity.BulletPool;
 import entity.EnemyShip;
@@ -79,7 +80,6 @@ public class GameScreen extends Screen {
     private long highScoreNoticeStartTime;
 
     private boolean isPaused;
-    private boolean isAugSelect;
     private Cooldown pauseCooldown;
     private Cooldown returnMenuCooldown;
 
@@ -92,6 +92,18 @@ public class GameScreen extends Screen {
     private final GameState state;
 
     private Ship.ShipType shipType;
+
+    /** control augment screen and player level up toast screen
+     * 2025-11-16 add new variable
+     * */
+    private List<Augment> augOption;
+    private boolean isAugSelect = false;
+    private int augmentIndex = 0;
+    private Cooldown augmentCooldown;
+
+    private boolean isLevelUpToast = false;
+    private long levelUpToastStart;
+
     /**
      * Constructor, establishes the properties of the screen.
      *
@@ -186,6 +198,9 @@ public class GameScreen extends Screen {
         this.isPaused = false;
         this.pauseCooldown = Core.getCooldown(300);
         this.returnMenuCooldown = Core.getCooldown(300);
+
+        augmentCooldown = Core.getCooldown(300);  // 0.2초 디바운스
+        augmentCooldown.reset();
     }
 
 
@@ -247,6 +262,15 @@ public class GameScreen extends Screen {
         }
 
         checkLevelUp();
+        if (isLevelUpToast) {
+            if (System.currentTimeMillis() - levelUpToastStart >= 1000) {
+                cleanBullets();
+                isLevelUpToast = false;
+            }
+        }
+        if (isAugSelect && !isLevelUpToast) {
+            selectAugment();
+        }
 
         if (!this.isPaused && !this.isAugSelect) {
             if (this.inputDelay.checkFinished() && !this.levelFinished) {
@@ -416,19 +440,52 @@ public class GameScreen extends Screen {
                     this.height / 2 + 60
             );
 		}
-        if(this.isAugSelect){
-            drawManager.drawAugmentOverlay(this);
+        if (this.isLevelUpToast) {
+            drawManager.drawLevelUpToast(this);
+        }
+
+        if(this.isAugSelect && !isLevelUpToast){
+            drawManager.drawAugmentOverlay(this, augOption, augmentIndex);
         }
         drawManager.completeDrawing(this);
+
     }
 
     /**
      * Checks whether the player has enough EXP to level up.
+     * 2025-11-16 Added in commit : feat : Add augment select system.
      */
     private void checkLevelUp(){
         if(state.getExp() >= 100){
             state.resetExp();
+            List<Augment> list = new ArrayList<>(AugmentPool.pool);
+            Collections.shuffle(list);
+            augOption = list.subList(0, Math.min(3, list.size()));
             isAugSelect = true;
+            isLevelUpToast = true;
+            SoundManager.playOnce("sound/win.wav");
+            levelUpToastStart = System.currentTimeMillis();
+        }
+    }
+
+    /**
+     * Handles input for the augment selection menu.
+     * 2025-11-16 Added in commit : feat : Add augment select system.
+     */
+    private void selectAugment(){
+        if(isAugSelect){
+            if((inputManager.isKeyDown(KeyEvent.VK_UP) ||  inputManager.isKeyDown(KeyEvent.VK_W))
+                    && augmentCooldown.checkFinished()){
+                augmentIndex = (augmentIndex - 1 + 3) % 3;
+                augmentCooldown.reset();
+            }else if((inputManager.isKeyDown(KeyEvent.VK_DOWN) ||  inputManager.isKeyDown(KeyEvent.VK_S))
+                    && augmentCooldown.checkFinished()){
+                augmentIndex = (augmentIndex + 1 + 3) % 3;
+                augmentCooldown.reset();
+            }else if((inputManager.isKeyDown(KeyEvent.VK_SPACE) && augmentCooldown.checkFinished())) {
+                isAugSelect = false;
+                augmentCooldown.reset();
+            }
         }
     }
 
