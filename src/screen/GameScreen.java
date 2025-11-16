@@ -79,6 +79,7 @@ public class GameScreen extends Screen {
     private long highScoreNoticeStartTime;
 
     private boolean isPaused;
+    private boolean isAugSelect;
     private Cooldown pauseCooldown;
     private Cooldown returnMenuCooldown;
 
@@ -247,7 +248,7 @@ public class GameScreen extends Screen {
 
         checkLevelUp();
 
-        if (!this.isPaused) {
+        if (!this.isPaused && !this.isAugSelect) {
             if (this.inputDelay.checkFinished() && !this.levelFinished) {
                 boolean moveRight, moveLeft, fire;
                 moveRight = inputManager.isP1RightPressed();
@@ -415,7 +416,9 @@ public class GameScreen extends Screen {
                     this.height / 2 + 60
             );
 		}
-
+        if(this.isAugSelect){
+            drawManager.drawAugmentOverlay(this);
+        }
         drawManager.completeDrawing(this);
     }
 
@@ -425,7 +428,7 @@ public class GameScreen extends Screen {
     private void checkLevelUp(){
         if(state.getExp() >= 100){
             state.resetExp();
-            isPaused = true;
+            isAugSelect = true;
         }
     }
 

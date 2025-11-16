@@ -775,6 +775,18 @@ public final class DrawManager {
         backBufferGraphics.setColor(Color.WHITE);
         drawCenteredRegularString(screen, returnMenu, screen.getHeight()-50);
     }//ADD This Screen
+
+    public void drawAugmentOverlay(final Screen screen){
+        backBufferGraphics.setColor(new Color(0,0,0,200));
+        backBufferGraphics.fillRect(0, 0, screen.getWidth(), screen.getHeight());
+
+        // left Aug
+        // center Aug
+        backBufferGraphics.setColor(Color.GREEN);
+        drawCenteredBigString(screen, "asdfasdfasf" , screen.getHeight()/2);
+        // right Aug
+    }
+
     /**
      * Draws high score screen title and instructions.
      *
