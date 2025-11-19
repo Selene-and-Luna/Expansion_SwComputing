@@ -40,7 +40,9 @@ public class GameScreen extends Screen {
     private static final int SCREEN_CHANGE_INTERVAL = 1500;
     /** Height of the interface separation line. */
     private static final int SEPARATION_LINE_HEIGHT = 68;
-      private static final int HIGH_SCORE_NOTICE_DURATION = 2000;
+    private static final int HIGH_SCORE_NOTICE_DURATION = 2000;
+    private static final int MAX_EXP = 100;
+    private static final int AUGMENT_OPTION_COUNT = 3;
     private static boolean sessionHighScoreNotified = false;
 
     /** For Check Achievement
@@ -55,6 +57,8 @@ public class GameScreen extends Screen {
     private EnemyShip enemyShipSpecial;
     /** Formation of player ships. */
     private PlayerShip playerShip;
+    /** Stat of player ships. */
+    private PlayerShipStats playerStats;
     /** Minimum time between bonus ship appearances. */
     private Cooldown enemyShipSpecialCooldown;
     /** Time until bonus ship explosion disappears. */
@@ -127,6 +131,7 @@ public class GameScreen extends Screen {
         this.bonusLife = bonusLife;
         this.level = gameState.getLevel();
         this.playerShip = gameState.getPlayerShip();
+        this.playerStats = playerShip.getStats();
 
         // for check Achievement 2025-10-02 add
         this.achievementManager = achievementManager;
@@ -390,9 +395,8 @@ public class GameScreen extends Screen {
 
 		// Aggregate UI (team score & team lives)
 		drawManager.drawScore(this, state.getScore());
-        drawManager.drawExp(this, state.getExp());
-        drawManager.drawLives(this, state.getPlayerShip().getStats().getHP());
-        drawManager.drawLives(this, playerShip.getStats().getHP());
+        drawManager.drawExp(this, playerStats.getExp());
+        drawManager.drawLives(this, playerStats.getHP());
 		drawManager.drawCoins(this,  state.getCoins()); // ADD THIS LINE - 2P mode: team total
         // 2P mode: setting per-player coin count
 //        if (state.isCoop()) {
@@ -454,11 +458,11 @@ public class GameScreen extends Screen {
      * 2025-11-16 Added in commit : feat : Add augment select system.
      */
     private void checkLevelUp(){
-        if(state.getExp() >= 100){
-            state.resetExp();
+        if(playerStats.getExp() >= MAX_EXP){
+            playerStats.resetExp();
             List<Augment> list = new ArrayList<>(AugmentPool.pool);
             Collections.shuffle(list);
-            augOption = list.subList(0, Math.min(3, list.size()));
+            augOption = list.subList(0, Math.min(AUGMENT_OPTION_COUNT, list.size()));
             isAugSelect = true;
             isLevelUpToast = true;
             cleanBullets();
@@ -475,11 +479,11 @@ public class GameScreen extends Screen {
         if(isAugSelect){
             if((inputManager.isKeyDown(KeyEvent.VK_UP) ||  inputManager.isKeyDown(KeyEvent.VK_W))
                     && augmentCooldown.checkFinished()){
-                augmentIndex = (augmentIndex - 1 + 3) % 3;
+                augmentIndex = (augmentIndex - 1 + AUGMENT_OPTION_COUNT) % AUGMENT_OPTION_COUNT;
                 augmentCooldown.reset();
             }else if((inputManager.isKeyDown(KeyEvent.VK_DOWN) ||  inputManager.isKeyDown(KeyEvent.VK_S))
                     && augmentCooldown.checkFinished()){
-                augmentIndex = (augmentIndex + 1 + 3) % 3;
+                augmentIndex = (augmentIndex + 1 + AUGMENT_OPTION_COUNT) % AUGMENT_OPTION_COUNT;
                 augmentCooldown.reset();
             }else if((inputManager.isKeyDown(KeyEvent.VK_SPACE) && augmentCooldown.checkFinished())) {
                 isAugSelect = false;
@@ -582,7 +586,7 @@ public class GameScreen extends Screen {
                             drawManager.triggerExplosion(enemyShip.getPositionX(), enemyShip.getPositionY(),
                                     true, finalShip);
                             state.addScore(points); // 2P mode: modified to add to P1 score for now
-                            state.addExp(exp);
+                            playerStats.addExp(exp);
                             state.incShipsDestroyed();
 
                             // obtain drop from ItemManager (may return null)
@@ -607,7 +611,7 @@ public class GameScreen extends Screen {
                     state.addCoins(this.enemyShipSpecial.getStats().getCoinValue()); // 2P mode: modified to per-player coins
 
                     state.addScore(points);
-                    state.addExp(exp);
+                    playerStats.addExp(exp);
                     state.incShipsDestroyed(); // 2P mode: modified incrementing ships destroyed
 
 					this.enemyShipSpecial.destroy();
@@ -686,6 +690,6 @@ public class GameScreen extends Screen {
     private void earlyExitToScore() {
         SoundManager.stopBackgroundMusic();
         // 목숨 0으로
-        while (playerShip.getStats().getHP() > 0) playerShip.getStats().setHP(playerShip.getStats().getHP() - 1);
+        while (playerStats.getHP() > 0) playerStats.setHP(playerStats.getHP() - 1);
     }
 }

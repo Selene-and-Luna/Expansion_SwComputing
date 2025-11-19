@@ -1,9 +1,9 @@
 package engine.augment;
 
 public class Augment {
-    public String name;
-    public String description;
-    public AugmentEffect effect;
+    public final String name;
+    public final String description;
+    public final AugmentEffect effect;
 
     /**
      * Creates an augment with its display name, description, and effect logic.

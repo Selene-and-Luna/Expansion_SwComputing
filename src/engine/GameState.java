@@ -30,8 +30,6 @@ public class GameState {
 	/** Current coin count. */ // ADD THIS LINE
     private static int coins = 0;
     private PlayerShip playerShip;
-    /** EXP */
-    private int exp = 0;
 
     private static class EffectState {
         Cooldown cooldown;
@@ -196,10 +194,6 @@ public class GameState {
 
         return state.effectValue;
     }
-
-    public void addExp(int delta) { exp += delta; }
-    public int getExp() { return exp; }
-    public void resetExp() { exp %= 100; }
 
     /** Call this each frame to clean up expired effects */
     public void updateEffects() {
