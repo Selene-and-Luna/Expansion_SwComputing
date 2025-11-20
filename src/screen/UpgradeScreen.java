@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 public class UpgradeScreen extends Screen {
     public UpgradeScreen(final int width, final int height, final int fps) {
         super(width, height, fps);
-        this.returnCode = 3;
+        this.returnCode = 7;
     }
     public final int run() {
         super.run();
@@ -16,7 +16,7 @@ public class UpgradeScreen extends Screen {
         super.update();
         draw();
 
-        if (inputManager.isKeyDown(KeyEvent.VK_SPACE) && this.inputDelay.checkFinished()) {
+        if (inputManager.isKeyDown(KeyEvent.VK_BACK_SPACE) && this.inputDelay.checkFinished()) {
             this.returnCode = 1;
             this.isRunning = false;
         }
