@@ -1,4 +1,3 @@
-// engine/GameState.java
 package engine;
 
 import java.util.HashMap;
@@ -28,6 +27,7 @@ public class GameState {
 	/** Current coin count. */ // ADD THIS LINE
     private static int coins = 0;
     private PlayerShip playerShip;
+    private int itemsCollected = 0;
 
     private static class EffectState {
         Cooldown cooldown;
@@ -76,6 +76,7 @@ public class GameState {
         this.bulletsShot = bulletsShot;
 		this.shipsDestroyed = shipsDestroyed;
 		GameState.coins = coins;
+        this.itemsCollected = 0;
         initializeEffectStates();
     }
 
@@ -90,6 +91,12 @@ public class GameState {
 	public int getShipsDestroyed() {
 		return shipsDestroyed;
 	}
+    public int getItemsCollected() {
+        return itemsCollected;
+    }
+    public void incrementItemsCollected() {
+        this.itemsCollected++;
+    }
 
 	public void addScore(final int delta) {
 		int realDelta = delta;

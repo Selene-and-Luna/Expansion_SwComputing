@@ -331,14 +331,6 @@ public class GameScreen extends Screen {
                 }
                 // Update ships & enemies
                 playerShip.update();
-
-//                 this.enemyShipFormation.update();
-//                 int bulletsBefore = this.bullets.size();
-//                 this.enemyShipFormation.shoot(this.bullets);
-//                 if (this.bullets.size() > bulletsBefore) {
-//                     // At least one enemy bullet added
-//                     SoundManager.playOnce("sound/shoot_enemies.wav");
-//                 }
             }
             if (this.enemyShipSpecial == null && this.enemyShipSpecialCooldown.checkFinished()) {
                 this.enemyShipSpecial = new EnemyShip();
@@ -439,11 +431,13 @@ public class GameScreen extends Screen {
             drawManager.drawEntity(this.enemyShipSpecial, this.enemyShipSpecial.getPositionX(), this.enemyShipSpecial.getPositionY());
         if (this.enemyShipFormation != null)
             enemyShipFormation.draw();
-        for (EnemyShip enemyShip : this.enemyShipFormation) {
-            if (enemyShip.isDestroyed()) continue;
-            EnemyShipStats stats = enemyShip.getStats();
-            drawManager.drawHpBar(enemyShip.getPositionX(),enemyShip.getPositionY() + 16,enemyShip.getWidth(),3,
-                    stats.getHp() - stats.getTotalDamage(),stats.getHp(),true);
+        if (this.enemyShipFormation != null) {
+            for (EnemyShip enemyShip : this.enemyShipFormation) {
+                if (enemyShip.isDestroyed()) continue;
+                EnemyShipStats stats = enemyShip.getStats();
+                drawManager.drawHpBar(enemyShip.getPositionX(),enemyShip.getPositionY() + 16,enemyShip.getWidth(),3,
+                        stats.getHp() - stats.getTotalDamage(),stats.getHp(),true);
+            }
         }
       
         if (this.boss != null)
@@ -543,6 +537,11 @@ public class GameScreen extends Screen {
                 augmentIndex = (augmentIndex + 1 + AUGMENT_OPTION_COUNT) % AUGMENT_OPTION_COUNT;
                 augmentCooldown.reset();
             }else if((inputManager.isKeyDown(KeyEvent.VK_SPACE) && augmentCooldown.checkFinished())) {
+                if (augmentIndex >= 0 && augmentIndex < augOption.size()) {
+                    Augment selectedAugment = augOption.get(augmentIndex);
+                    selectedAugment.effect.apply();
+                    Core.getLogger().info("[Augment] Applied effect: " + selectedAugment.name);
+                }
                 isAugSelect = false;
                 augmentCooldown.reset();
             }
@@ -589,6 +588,7 @@ public class GameScreen extends Screen {
                 this.logger.info("Player " + " picked up item: " + item.getType());
                 SoundManager.playOnce("sound/hover.wav");
                 item.applyEffect(getGameState());
+                this.state.incrementItemsCollected();
             }
         }
         this.items.removeAll(collected);
