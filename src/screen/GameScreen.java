@@ -439,13 +439,16 @@ public class GameScreen extends Screen {
             drawManager.drawEntity(this.enemyShipSpecial, this.enemyShipSpecial.getPositionX(), this.enemyShipSpecial.getPositionY());
         if (this.enemyShipFormation != null)
             enemyShipFormation.draw();
-        for (EnemyShip enemyShip : this.enemyShipFormation) {
-            if (enemyShip.isDestroyed()) continue;
-            EnemyShipStats stats = enemyShip.getStats();
-            drawManager.drawHpBar(enemyShip.getPositionX(),enemyShip.getPositionY() + 16,enemyShip.getWidth(),3,
-                    stats.getHp() - stats.getTotalDamage(),stats.getHp(),true);
+        if (this.enemyShipFormation != null) {
+            enemyShipFormation.draw();
+            for (EnemyShip enemyShip : this.enemyShipFormation) {
+                if (enemyShip.isDestroyed()) continue;
+                EnemyShipStats stats = enemyShip.getStats();
+                drawManager.drawHpBar(enemyShip.getPositionX(),enemyShip.getPositionY() + 16,enemyShip.getWidth(),3,
+                        stats.getHp() - stats.getTotalDamage(),stats.getHp(),true);
+            }
         }
-      
+
         if (this.boss != null)
             drawManager.drawEntity(this.boss, this.boss.getPositionX(), this.boss.getPositionY());
 
