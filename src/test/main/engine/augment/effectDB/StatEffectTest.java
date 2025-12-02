@@ -39,7 +39,7 @@ class StatEffectTest {
         effect.apply(player);
 
         assertEquals(originalSpeed + 1, stats.getMoveSpeed(),
-                "Move speed stat should increase by +2 after effect");
+                "Move speed stat should increase by +1 after effect");
     }
 
     @Test
