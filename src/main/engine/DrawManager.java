@@ -981,16 +981,17 @@ public final class DrawManager {
     public void drawUpgradeScreen(final Screen screen, final List<SpriteType> shipTypes, final int shipIndex,
                                   final int selectionIndex, final ShipUpgradeManager upgradeManager) {
         SpriteType currentType = shipTypes.get(shipIndex);
-        //PlayerShipStats stats = upgradeManager.getUpgradedStats(currentType);
+        PlayerShipStats stats = upgradeManager.getUpgradedStats(currentType);
         EnumMap<ShipUpgradeType, Integer> levels = upgradeManager.getLevels(currentType);
 
+        drawBackButton(screen, false);
         drawCenteredBigString(screen, "UPGRADE HANGAR", screen.getHeight() / 5);
         drawCoins(screen, upgradeManager.getCoins());
 
         String[] labels = {"Ship", "Attack", "Move Speed", "Fire Rate", "Max HP", "Reset"};
         int baseY = screen.getHeight() / 3;
         int spacing = (int) (fontRegularMetrics.getHeight() * 1.5);
-/*
+
         for (int i = 0; i < labels.length; i++) {
             boolean highlight = i == selectionIndex;
             backBufferGraphics.setColor(highlight ? Color.GREEN : Color.WHITE);
@@ -1009,7 +1010,7 @@ public final class DrawManager {
                 case 3 -> drawStatLine(screen, y, labels[i], levels.getOrDefault(ShipUpgradeType.FIRE_RATE, 1),
                         Math.max(1, 1000 / stats.getShootingInterval()), upgradeManager.getUpgradeCost(currentType, ShipUpgradeType.FIRE_RATE), "shot/s");
                 case 4 -> drawStatLine(screen, y, labels[i], levels.getOrDefault(ShipUpgradeType.MAX_HP, 1),
-                        stats.getHP(), upgradeManager.getUpgradeCost(currentType, ShipUpgradeType.MAX_HP));
+                        stats.getMaxHP(), upgradeManager.getUpgradeCost(currentType, ShipUpgradeType.MAX_HP));
                 case 5 -> {
                     int refund = upgradeManager.getRefundAmount(currentType);
                     String resetText = String.format("Reset (refund %d coins)", refund);
@@ -1019,9 +1020,9 @@ public final class DrawManager {
                 }
             }
         }
-*/
+
         backBufferGraphics.setColor(Color.GRAY);
-        drawCenteredRegularString(screen, "Up/Down: select | Left/Right: adjust | ESC: back", screen.getHeight() - 40);
+        drawCenteredRegularString(screen, "Up/Down: select | space: adjust | ESC: back", screen.getHeight() - 40);
     }
 
     private void drawStatLine(final Screen screen, final int y, final String label, final int level,

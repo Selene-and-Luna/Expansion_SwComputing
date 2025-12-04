@@ -7,6 +7,7 @@ import main.engine.ShipUpgradeType;
 import main.engine.SoundManager;
 import main.engine.DrawManager.SpriteType;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class UpgradeScreen extends Screen {
         if (this.selectionCooldown.checkFinished() && this.inputDelay.checkFinished()) {
             handleInput();
         }
+
     }
 
     private void handleInput() {
@@ -87,7 +89,7 @@ public class UpgradeScreen extends Screen {
         }
 
         if (selectionIndex >= 1 && selectionIndex <= 4) {
-            if (inputManager.isKeyDown(KeyEvent.VK_RIGHT) || inputManager.isKeyDown(KeyEvent.VK_D)) {
+            if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
                 ShipUpgradeType type = ShipUpgradeType.values()[selectionIndex - 1];
                 if (upgradeManager.upgradeStat(getCurrentShip(), type)) {
                     SoundManager.playOnce("sound/select.wav");
@@ -97,10 +99,20 @@ public class UpgradeScreen extends Screen {
                 this.selectionCooldown.reset();
             }
         } else if (selectionIndex == 5) {
-            if (inputManager.isKeyDown(KeyEvent.VK_RIGHT) || inputManager.isKeyDown(KeyEvent.VK_D)) {
+            if (inputManager.isKeyDown(KeyEvent.VK_SPACE )) {
                 upgradeManager.resetShip(getCurrentShip());
                 SoundManager.playOnce("sound/select.wav");
                 this.selectionCooldown.reset();
+            }
+        }
+        // back button click event
+        if (inputManager.isMouseClicked()) {
+            int mx = inputManager.getMouseX();
+            int my = inputManager.getMouseY();
+            Rectangle backBox = drawManager.getBackButtonHitbox(this);
+            if (backBox.contains(mx, my)) {
+                this.returnCode = 1;
+                this.isRunning = false;
             }
         }
     }

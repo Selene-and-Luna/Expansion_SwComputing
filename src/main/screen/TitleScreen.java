@@ -97,7 +97,7 @@ public class TitleScreen extends Screen {
                     //2025-11-11 add upgrade case
 
                     case 1: // "upgrade
-                        this.returnCode = 9;
+                        this.returnCode = 7;
                         this.isRunning = false;
                         break;
 

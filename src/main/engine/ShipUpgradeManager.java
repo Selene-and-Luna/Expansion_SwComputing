@@ -1,8 +1,8 @@
 package main.engine;
 
 import main.engine.DrawManager.SpriteType;
-import main.entity.PlayerShipLibrary;
-import main.entity.PlayerShipStats;
+import main.entity.Player.PlayerShipLibrary;
+import main.entity.Player.PlayerShipStats;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -43,7 +43,7 @@ public class ShipUpgradeManager {
             PlayerShipStats snapshot = new PlayerShipStats(
                     stats.getShipWidth(),
                     stats.getShipHeight(),
-                    stats.getHP(),
+                    stats.getMaxHP(),
                     stats.getATK(),
                     stats.getMoveSpeed(),
                     stats.getBulletSpeed(),
@@ -217,7 +217,7 @@ public class ShipUpgradeManager {
         int attack = base.getATK() + (attackLevel - 1);
         int moveSpeed = base.getMoveSpeed() + (moveLevel - 1);
         int shootingInterval = Math.max(200, base.getShootingInterval() - 50 * (rateLevel - 1));
-        int maxHp = base.getHP() + (hpLevel - 1);
+        int maxHp = base.getMaxHP() + (hpLevel - 1);
 
         PlayerShipStats upgraded = new PlayerShipStats(
                 base.getShipWidth(),
