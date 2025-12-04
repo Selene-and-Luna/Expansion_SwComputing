@@ -963,18 +963,6 @@ public final class DrawManager {
 
     /**
      * Draws Upgrade system.
-     *
-     * @param screen
-     *                   Screen to draw on.
-     * @param gameState
-     *                  display curren number of coin
-     * @param currentShipType
-     *                  current select player's ship type
-     * @param upgradeManager
-     *                  check level % upgrade cost
-     * @param hoverIndex
-     *                  +button
-     * [2025-11-11] complete Upgrade Menu method in DrawManager
      */
     public void drawUpgradeScreen(final Screen screen, final List<SpriteType> shipTypes, final int shipIndex,
                                   final int selectionIndex, final ShipUpgradeManager upgradeManager) {
