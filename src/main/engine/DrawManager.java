@@ -925,8 +925,8 @@ public final class DrawManager {
                                     Achievement achievement, List<String> completer, String numOfPages) {
         String achievementsTitle = "Achievements";
         String instructionsString = "Press ESC to return";
-        String playerModeString = "              1P                                      2P              ";
-        String prevNextString = "PREV                                                              NEXT";
+        String nextString = "NEXT";
+        String prevString = "PREV";
         String achievementName = achievement.getName();
         String descriptionString = achievement.getDescription();
 
@@ -936,8 +936,6 @@ public final class DrawManager {
         drawCenteredRegularString(screen, achievementName, screen.getHeight() / 7);
         backBufferGraphics.setColor(Color.GRAY);
         drawCenteredRegularString(screen, descriptionString, screen.getHeight() / 5);
-        backBufferGraphics.setColor(Color.GREEN);
-        drawCenteredRegularString(screen, playerModeString, (screen.getHeight() / 4));
         backBufferGraphics.setColor(Color.GRAY);
         drawCenteredRegularString(screen, instructionsString, (int) (screen.getHeight() * 0.9));
 
@@ -945,10 +943,10 @@ public final class DrawManager {
         int startY = (int) (screen.getHeight() * 0.3);
         int lineHeight = 25;
 
-        // X positions for the 1P and 2P columns
-        int leftX = screen.getWidth() / 4;      // 1P column
-
-        // Separate completer into 1P and 2P teams based on the mode prefix
+        // X positions for the 1P
+        int leftX = screen.getWidth() / 4;      // left column
+        int rightX = screen.getWidth() * 2 / 3;  // right column
+        int rowsPerColumn = 7;
         if (completer != null && !completer.isEmpty()) {
 
             List<String> team = completer.stream().map(s -> s.substring(2)).toList();
@@ -956,9 +954,12 @@ public final class DrawManager {
             // Draw names in each column, up to the max number of lines
             int maxLines = team.size();
             for (int i = 0; i < maxLines; i++) {
-                int y = startY + i * lineHeight;
+                int column = i / rowsPerColumn;
+                int row = i % rowsPerColumn;
+                int y = startY + row * lineHeight;
+                int x = (column % 2 == 0) ? leftX : rightX;
                 backBufferGraphics.setColor(Color.WHITE);
-                backBufferGraphics.drawString(team.get(i), leftX, y);
+                backBufferGraphics.drawString(team.get(i), x, y);
             }
         } else {
             // Display placeholder text if no achievers were found
@@ -966,11 +967,14 @@ public final class DrawManager {
             drawCenteredBigString(screen, "No achievers found.", (int) (screen.getHeight() * 0.5));
         }
         backBufferGraphics.setColor(Color.GREEN);
-        drawCenteredBigString(screen, numOfPages, (int) (screen.getHeight() * 0.8));
+        //drawCenteredBigString(screen, numOfPages, (int) (screen.getHeight() * 0.8));
+        int navigationY = (int) (screen.getHeight() * 0.8);
+        drawCenteredBigString(screen, numOfPages, navigationY);
         // Draw prev/next navigation buttons at the bottom
         backBufferGraphics.setColor(Color.GREEN);
-        drawCenteredRegularString(screen, prevNextString, (int) (screen.getHeight() * 0.8));
-
+        //drawCenteredRegularString(screen, prevNextString, (int) (screen.getHeight() * 0.8));
+        drawCenteredRegularString(prevString, screen.getWidth() / 4, navigationY);
+        drawCenteredRegularString(nextString, screen.getWidth() * 3 / 4, navigationY);
         // Draw back button at the top-left corner
         drawBackButton(screen, false);
     }
