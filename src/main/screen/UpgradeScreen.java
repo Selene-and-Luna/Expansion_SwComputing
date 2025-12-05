@@ -52,7 +52,19 @@ public class UpgradeScreen extends Screen {
         if (this.selectionCooldown.checkFinished() && this.inputDelay.checkFinished()) {
             handleInput();
         }
-
+        handleMouseBack();
+    }
+    private void handleMouseBack(){
+        // back button click event
+        if (inputManager.isMouseClicked()) {
+            int mx = inputManager.getMouseX();
+            int my = inputManager.getMouseY();
+            Rectangle backBox = drawManager.getBackButtonHitbox(this);
+            if (backBox.contains(mx, my)) {
+                this.returnCode = 1;
+                this.isRunning = false;
+            }
+        }
     }
 
     private void handleInput() {
@@ -105,28 +117,20 @@ public class UpgradeScreen extends Screen {
                 this.selectionCooldown.reset();
             }
         }
-        // back button click event
-        if (inputManager.isMouseClicked()) {
-            int mx = inputManager.getMouseX();
-            int my = inputManager.getMouseY();
-            Rectangle backBox = drawManager.getBackButtonHitbox(this);
-            if (backBox.contains(mx, my)) {
-                this.returnCode = 1;
-                this.isRunning = false;
-            }
-        }
     }
 
     private void draw() {
         drawManager.initDrawing(this);
+        drawManager.drawUpgradeScreen(this, shipTypes, shipIndex, selectionIndex, upgradeManager);
         // hover highlight
         int mx = inputManager.getMouseX();
         int my = inputManager.getMouseY();
-        java.awt.Rectangle backBox = drawManager.getBackButtonHitbox(this);
+        Rectangle backBox = drawManager.getBackButtonHitbox(this);
+
         if (backBox.contains(mx, my)) {
             drawManager.drawBackButton(this, true);
         }
-        drawManager.drawUpgradeScreen(this, shipTypes, shipIndex, selectionIndex, upgradeManager);
+
         drawManager.completeDrawing(this);
     }
 }
