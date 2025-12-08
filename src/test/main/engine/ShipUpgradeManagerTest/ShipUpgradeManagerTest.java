@@ -1,8 +1,8 @@
 package test.main.engine.ShipUpgradeManagerTest;
 
 import main.engine.DrawManager.SpriteType;
-import main.engine.ShipUpgradeManager;
-import main.engine.ShipUpgradeType;
+import main.engine.upgrade.ShipUpgradeManager;
+import main.engine.upgrade.ShipUpgradeType;
 import main.entity.Player.PlayerShipLibrary;
 import main.entity.Player.PlayerShipStats;
 import org.junit.jupiter.api.*;
@@ -94,7 +94,7 @@ public class ShipUpgradeManagerTest {
 
         // ATK stat should increase
         PlayerShipStats upgraded = manager.getUpgradedStats(SpriteType.Normal);
-        assertEquals(4, upgraded.getATK()); // base attack 3 → level 2 gives +1
+        assertEquals(4f, upgraded.getATK()); // base attack 3 → level 2 gives +1
     }
 
     @Test
