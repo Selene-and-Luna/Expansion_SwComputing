@@ -702,30 +702,6 @@ public class GameScreen extends Screen {
                     }
                 }
 
-                if (this.boss != null && !this.boss.isDestroyed()) {
-                    if (checkCollision(bullet, this.boss)) {
-                        recyclable.add(bullet);
-                        boss.hit(playerStats.getATK());
-
-                        if (boss.isDestroyed()) {
-                            int points = boss.getStats().getPointValue();
-                            state.addScore(points);
-                            state.addCoins(boss.getStats().getCoinValue());
-
-                            drawManager.triggerExplosion(
-                                    boss.getPositionX(),
-                                    boss.getPositionY(),
-                                    true,
-                                    true
-                            );
-
-                            SoundManager.playOnce("sound/explosion.wav");
-
-                            this.boss = null;
-                        }
-                    }
-                }
-
                 if (this.enemyShipSpecial != null && !this.enemyShipSpecial.isDestroyed() && checkCollision(bullet, this.enemyShipSpecial)) {
                     int points = this.enemyShipSpecial.getStats().getPointValue();
                     int exp = this.enemyShipSpecial.getStats().getExpValue();
